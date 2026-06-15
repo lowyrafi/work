@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($n=\\(Get-Command node -ErrorAction SilentlyContinue\\); if\\($n\\){node --version} else {\"no-node\"}; $np=\\(Get-Command npx -ErrorAction SilentlyContinue\\); if\\($np\\){\"npx-yes\"} else {\"no-npx\"})",
+      "PowerShell(Start-Process \"C:\\\\Users\\\\USER\\\\������� ��� ������\\\\index.html\")",
+      "PowerShell(\"opened\")"
+    ]
+  }
+}

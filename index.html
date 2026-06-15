@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מרכז הידע המקצועי | חברות הביטוח</title>
+<style>
+  :root{
+    --bg:#0f172a;
+    --bg-soft:#1e293b;
+    --panel:#ffffff;
+    --panel-2:#f8fafc;
+    --line:#e2e8f0;
+    --txt:#0f172a;
+    --txt-soft:#64748b;
+    --brand:#0d9488;
+    --brand-dark:#0f766e;
+    --brand-soft:#ccfbf1;
+    --accent:#2563eb;
+    --warn:#f59e0b;
+    --danger:#dc2626;
+    --shadow:0 1px 3px rgba(0,0,0,.08),0 8px 24px rgba(15,23,42,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;font-family:"Segoe UI","Assistant",Arial,sans-serif;
+    background:linear-gradient(180deg,#f1f5f9 0%,#e2e8f0 100%);
+    color:var(--txt);min-height:100vh;
+  }
+  /* ---------- Header ---------- */
+  header.top{
+    background:linear-gradient(135deg,var(--brand-dark),var(--brand));
+    color:#fff;padding:22px 28px;box-shadow:var(--shadow);
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+  }
+  header.top .brand{display:flex;align-items:center;gap:14px}
+  header.top .logo{
+    width:46px;height:46px;border-radius:12px;background:rgba(255,255,255,.16);
+    display:grid;place-items:center;font-size:24px;
+  }
+  header.top h1{margin:0;font-size:20px;font-weight:700}
+  header.top p{margin:2px 0 0;font-size:13px;opacity:.85}
+  header.top .actions{display:flex;gap:10px;flex-wrap:wrap}
+  .btn{
+    border:0;cursor:pointer;border-radius:10px;padding:10px 16px;font-size:14px;font-weight:600;
+    display:inline-flex;align-items:center;gap:7px;transition:.15s;font-family:inherit;
+  }
+  .btn-primary{background:#fff;color:var(--brand-dark)}
+  .btn-primary:hover{background:var(--brand-soft)}
+  .btn-ghost{background:rgba(255,255,255,.15);color:#fff}
+  .btn-ghost:hover{background:rgba(255,255,255,.28)}
+  .btn-sm{padding:6px 11px;font-size:12.5px;border-radius:8px}
+
+  /* ---------- Layout ---------- */
+  .wrap{display:grid;grid-template-columns:270px 1fr;gap:22px;padding:22px 28px;max-width:1500px;margin:0 auto}
+  @media(max-width:880px){.wrap{grid-template-columns:1fr}}
+
+  aside{position:sticky;top:22px;align-self:start;display:flex;flex-direction:column;gap:18px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+  .card .hd{padding:14px 16px;border-bottom:1px solid var(--line);font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+  .mini{margin-inline-start:auto;border:0;background:var(--panel-2);cursor:pointer;border-radius:7px;width:28px;height:28px;font-size:14px;display:grid;place-items:center}
+  .mini:hover{background:var(--brand-soft)}
+  .card .bd{padding:12px 14px}
+
+  .filter-item{
+    display:flex;align-items:center;justify-content:space-between;gap:8px;
+    padding:9px 11px;border-radius:9px;cursor:pointer;font-size:13.5px;color:var(--txt-soft);transition:.12s;
+  }
+  .filter-item:hover{background:var(--panel-2);color:var(--txt)}
+  .filter-item.active{background:var(--brand-soft);color:var(--brand-dark);font-weight:700}
+  .filter-item .count{
+    background:var(--line);color:var(--txt-soft);border-radius:20px;padding:1px 9px;font-size:11.5px;font-weight:700;min-width:24px;text-align:center;
+  }
+  .filter-item.active .count{background:var(--brand);color:#fff}
+
+  .stat-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 2px;color:var(--txt-soft)}
+  .stat-row b{color:var(--txt)}
+
+  /* ---------- Main ---------- */
+  main{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  .search{
+    flex:1;min-width:220px;position:relative;
+  }
+  .search input{
+    width:100%;padding:13px 42px 13px 14px;border:1px solid var(--line);border-radius:11px;
+    font-size:14.5px;font-family:inherit;background:#fff;box-shadow:var(--shadow);
+  }
+  .search input:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+  .search .ic{position:absolute;top:50%;right:14px;transform:translateY(-50%);opacity:.5}
+  select.sort{
+    padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff;
+    font-size:14px;font-family:inherit;box-shadow:var(--shadow);cursor:pointer;
+  }
+
+  .result-meta{font-size:13px;color:var(--txt-soft);padding:0 2px}
+
+  /* ---------- Entry cards ---------- */
+  .entries{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:14px}
+  .entry{
+    background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px;position:relative;transition:.15s;
+    border-top:3px solid var(--brand);
+  }
+  .entry:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(15,23,42,.12)}
+  .entry.pinned{border-top-color:var(--warn)}
+  .entry .row1{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .chip{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:20px;background:var(--brand-soft);color:var(--brand-dark)}
+  .chip.cat{background:#e0e7ff;color:#3730a3}
+  .entry h3{margin:0;font-size:16px;line-height:1.4}
+  .entry .content{font-size:13.5px;color:#334155;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+  .entry .foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px;border-top:1px dashed var(--line)}
+  .entry .date{font-size:12px;color:var(--txt-soft)}
+  .entry a.link{color:var(--accent);font-size:13px;font-weight:600;text-decoration:none;display:inline-flex;align-items:center;gap:5px;word-break:break-all}
+  .entry a.link:hover{text-decoration:underline}
+  .entry .tools{display:flex;gap:4px}
+  .icon-btn{border:0;background:var(--panel-2);cursor:pointer;border-radius:8px;width:30px;height:30px;display:grid;place-items:center;font-size:14px;transition:.12s}
+  .icon-btn:hover{background:var(--line)}
+  .pin-star{position:absolute;top:14px;left:14px;font-size:15px;color:var(--warn)}
+
+  .empty{
+    grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--txt-soft);
+    background:var(--panel);border:2px dashed var(--line);border-radius:var(--radius);
+  }
+  .empty .big{font-size:46px;margin-bottom:10px}
+
+  /* ---------- Modal ---------- */
+  .overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:50;overflow:auto;backdrop-filter:blur(2px)}
+  .overlay.show{display:flex}
+  .modal{background:#fff;border-radius:18px;width:100%;max-width:560px;box-shadow:0 20px 60px rgba(0,0,0,.3);animation:pop .18s ease}
+  @keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+  .modal .mh{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}
+  .modal .mh h2{margin:0;font-size:18px}
+  .modal .mb{padding:20px 22px;display:flex;flex-direction:column;gap:14px}
+  .field label{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:#334155}
+  .field input,.field select,.field textarea{
+    width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;
+  }
+  .field input:focus,.field select:focus,.field textarea:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+  .field textarea{min-height:110px;resize:vertical;line-height:1.6}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:520px){.two{grid-template-columns:1fr}}
+  .checkrow{display:flex;align-items:center;gap:9px;font-size:14px;font-weight:600;cursor:pointer}
+  .checkrow input{width:auto}
+  .modal .mf{padding:16px 22px;border-top:1px solid var(--line);display:flex;justify-content:flex-end;gap:10px}
+  .btn-solid{background:var(--brand);color:#fff}
+  .btn-solid:hover{background:var(--brand-dark)}
+  .btn-line{background:#fff;color:var(--txt-soft);border:1px solid var(--line)}
+  .btn-line:hover{background:var(--panel-2)}
+  .x{cursor:pointer;font-size:22px;color:var(--txt-soft);line-height:1;background:none;border:0}
+
+  /* ---------- Attachments ---------- */
+  .attach-list{display:flex;flex-direction:column;gap:7px;margin-top:4px}
+  .attach-row{
+    display:flex;align-items:center;gap:8px;background:var(--panel-2);border:1px solid var(--line);
+    border-radius:9px;padding:7px 10px;font-size:13px;
+  }
+  .attach-row .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .attach-row .sz{color:var(--txt-soft);font-size:11.5px}
+  .attach-row .rm{cursor:pointer;border:0;background:none;color:var(--danger);font-size:16px;line-height:1}
+  .filebox{
+    border:2px dashed var(--line);border-radius:11px;padding:14px;text-align:center;cursor:pointer;
+    color:var(--txt-soft);font-size:13.5px;transition:.12s;background:var(--panel-2);
+  }
+  .filebox:hover{border-color:var(--brand);color:var(--brand-dark);background:var(--brand-soft)}
+  .entry .files{display:flex;flex-direction:column;gap:6px}
+  .file-btn{
+    display:flex;align-items:center;gap:7px;text-align:right;width:100%;border:1px solid var(--line);
+    background:var(--panel-2);border-radius:9px;padding:8px 10px;font-size:13px;cursor:pointer;
+    font-family:inherit;color:#334155;transition:.12s;
+  }
+  .file-btn:hover{border-color:var(--brand);background:var(--brand-soft);color:var(--brand-dark)}
+  .file-btn .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .hidden{display:none!important}
+  footer.foot-note{text-align:center;font-size:12px;color:var(--txt-soft);padding:18px}
+  .dropzone{
+    position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;
+    background:rgba(13,148,136,.20);backdrop-filter:blur(3px);
+  }
+  .dropzone.show{display:flex}
+  .dz-inner{
+    background:#fff;border:3px dashed var(--brand);border-radius:20px;padding:46px 60px;text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,.25);pointer-events:none;
+  }
+  .dz-ic{font-size:56px}
+  .dz-t{font-size:20px;font-weight:800;color:var(--brand-dark);margin-top:10px}
+  .dz-s{font-size:14px;color:var(--txt-soft);margin-top:4px}
+  .filebox.over{border-color:var(--brand);color:var(--brand-dark);background:var(--brand-soft)}
+  .attach-row.flash{animation:flashRow 1.6s ease}
+  @keyframes flashRow{0%,100%{background:var(--panel-2)}20%,60%{background:var(--warn);color:#fff}}
+  .toast{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+    background:var(--txt);color:#fff;padding:12px 22px;border-radius:12px;font-size:14px;font-weight:600;
+    box-shadow:0 10px 30px rgba(0,0,0,.3);opacity:0;transition:.3s;z-index:80;
+  }
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="brand">
+    <div class="logo">🛡️</div>
+    <div>
+      <h1>מרכז הידע המקצועי</h1>
+      <p>כל המידע מחברות הביטוח במקום אחד</p>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn btn-primary" onclick="openModal()">➕ הוספת פריט</button>
+    <button class="btn btn-ghost" onclick="location.reload()" title="טעינה מחדש של הדף">🔄 רענון</button>
+    <button class="btn btn-ghost" onclick="exportData()">⬇️ גיבוי</button>
+    <button class="btn btn-ghost" onclick="document.getElementById('importFile').click()">⬆️ שחזור</button>
+    <input type="file" id="importFile" accept="application/json" class="hidden" onchange="importData(event)">
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Sidebar -->
+  <aside>
+    <div class="card">
+      <div class="hd">🏢 חברות ביטוח</div>
+      <div class="bd" id="companyFilters"></div>
+    </div>
+    <div class="card">
+      <div class="hd">🗂️ קטגוריות
+        <button class="mini" title="ניהול קטגוריות" onclick="openCatManager()">⚙️</button></div>
+      <div class="bd" id="categoryFilters"></div>
+    </div>
+    <div class="card">
+      <div class="hd">📊 סטטיסטיקה</div>
+      <div class="bd" id="stats"></div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main>
+    <div class="toolbar">
+      <div class="search">
+        <input type="text" id="searchBox" placeholder="חיפוש בכותרת, בתוכן, בחברה..." oninput="render()">
+        <span class="ic">🔍</span>
+      </div>
+      <select class="sort" id="sortBy" onchange="render()">
+        <option value="dateDesc">חדש → ישן</option>
+        <option value="dateAsc">ישן → חדש</option>
+        <option value="company">לפי חברה</option>
+        <option value="category">לפי קטגוריה</option>
+        <option value="title">לפי כותרת</option>
+      </select>
+    </div>
+    <div class="result-meta" id="resultMeta"></div>
+    <div class="entries" id="entries"></div>
+  </main>
+</div>
+
+<footer class="foot-note">
+  הנתונים נשמרים מקומית בדפדפן זה בלבד. מומלץ לבצע גיבוי תקופתי בכפתור "גיבוי".
+</footer>
+
+<!-- Modal -->
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <div class="mh">
+      <h2 id="modalTitle">הוספת פריט מידע</h2>
+      <button class="x" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="mb">
+      <input type="hidden" id="editId">
+      <div class="two">
+        <div class="field">
+          <label>חברת ביטוח *</label>
+          <select id="fCompany"></select>
+        </div>
+        <div class="field">
+          <label>קטגוריה *</label>
+          <select id="fCategory"></select>
+        </div>
+      </div>
+      <div class="field">
+        <label>כותרת *</label>
+        <input type="text" id="fTitle" placeholder="למשל: עדכון חיתום בריאות – יוני 2026">
+      </div>
+      <div class="field">
+        <label>תוכן / סיכום</label>
+        <textarea id="fContent" placeholder="עיקרי המידע, נקודות חשובות, הערות..."></textarea>
+      </div>
+      <div class="two">
+        <div class="field">
+          <label>קישור (חוזר / מסמך / אתר)</label>
+          <input type="text" id="fLink" placeholder="https://...">
+        </div>
+        <div class="field">
+          <label>תאריך</label>
+          <input type="date" id="fDate">
+        </div>
+      </div>
+      <div class="field">
+        <label>מסמכים מצורפים מהמחשב (PDF, Word, תמונה וכו')</label>
+        <div class="filebox" onclick="document.getElementById('fFiles').click()">
+          📎 לחץ לבחירת קבצים מהמחשב (אפשר לבחור כמה ביחד)
+        </div>
+        <input type="file" id="fFiles" multiple class="hidden" onchange="stageFiles(event)">
+        <div class="attach-list" id="stagedList"></div>
+      </div>
+      <label class="checkrow"><input type="checkbox" id="fPin"> ⭐ סמן כחשוב / הצמד למעלה</label>
+    </div>
+    <div class="mf">
+      <button class="btn btn-line" onclick="closeModal()">ביטול</button>
+      <button class="btn btn-solid" onclick="saveEntry()">💾 שמירה</button>
+    </div>
+  </div>
+</div>
+
+<div class="dropzone" id="dropzone">
+  <div class="dz-inner">
+    <div class="dz-ic">📥</div>
+    <div class="dz-t">שחרר כאן כדי לצרף את הקבצים</div>
+    <div class="dz-s">הקבצים יתווספו לפריט החדש</div>
+  </div>
+</div>
+
+<!-- Category manager -->
+<div class="overlay" id="catOverlay">
+  <div class="modal">
+    <div class="mh">
+      <h2>ניהול קטגוריות</h2>
+      <button class="x" onclick="closeCatManager()">&times;</button>
+    </div>
+    <div class="mb">
+      <div class="field">
+        <label>הוספת קטגוריה חדשה</label>
+        <div style="display:flex;gap:8px">
+          <input type="text" id="newCat" placeholder="שם הקטגוריה" onkeydown="if(event.key==='Enter')addCategory()">
+          <button class="btn btn-solid" style="white-space:nowrap" onclick="addCategory()">➕ הוספה</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>קטגוריות קיימות</label>
+        <div class="attach-list" id="catList"></div>
+      </div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-line" onclick="closeCatManager()">סגירה</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============ Data setup ============ */
+const COMPANIES = ["הראל","מגדל","כלל ביטוח","מנורה מבטחים","הפניקס","איילון","הכשרה","ביטוח ישיר","AIG","שלמה ביטוח","הולנדיה","ווישור","אחר"];
+const DEFAULT_CATEGORIES = ["חוזרים","עדכוני מוצר","נהלים ותהליכים","טפסים","הנחיות חיתום","מבצעים ותמריצים","רגולציה","הדרכות","עמלות","אחר"];
+const STORE_KEY = "insuranceKnowledgeHub.v1";
+const CATS_KEY = "insuranceKnowledgeHub.categories.v1";
+
+let categories = loadCats();
+function loadCats(){
+  try{ const c=JSON.parse(localStorage.getItem(CATS_KEY)); return (Array.isArray(c)&&c.length)?c:[...DEFAULT_CATEGORIES]; }
+  catch(e){ return [...DEFAULT_CATEGORIES]; }
+}
+function persistCats(){ localStorage.setItem(CATS_KEY, JSON.stringify(categories)); }
+
+let data = load();
+let activeCompany = "all";
+let activeCategory = "all";
+
+function load(){
+  try{ return JSON.parse(localStorage.getItem(STORE_KEY)) || []; }
+  catch(e){ return []; }
+}
+function persist(){ localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+/* ============ File storage (IndexedDB) ============ */
+const DB_NAME="insuranceFilesDB", DB_STORE="files";
+let _db;
+function db(){
+  return new Promise((res,rej)=>{
+    if(_db) return res(_db);
+    const r = indexedDB.open(DB_NAME,1);
+    r.onupgradeneeded = ()=>{ r.result.createObjectStore(DB_STORE); };
+    r.onsuccess = ()=>{ _db=r.result; res(_db); };
+    r.onerror = ()=>rej(r.error);
+  });
+}
+function dbOp(mode,fn){
+  return db().then(d=>new Promise((res,rej)=>{
+    const tx=d.transaction(DB_STORE,mode), st=tx.objectStore(DB_STORE);
+    const out=fn(st);
+    tx.oncomplete=()=>res(out&&out.result);
+    tx.onerror=()=>rej(tx.error);
+  }));
+}
+const putFile=(id,blob)=>dbOp('readwrite',st=>st.put(blob,id));
+const getFile =(id)=>dbOp('readonly', st=>st.get(id));
+const delFile =(id)=>dbOp('readwrite',st=>st.delete(id));
+
+// files chosen in the modal but not yet saved
+let staged = [];   // [{id,name,type,size, blob?}]  blob present only for new files
+
+function addFiles(fileList){
+  let added=0;
+  [...fileList].forEach(f=>{
+    if(f.size > 25*1024*1024){ toast(`"${f.name}" גדול מ-25MB ולא צורף`); return; }
+    staged.push({id:uid(), name:f.name, type:f.type, size:f.size, blob:f}); added++;
+  });
+  renderStaged();
+  return added;
+}
+function stageFiles(e){ addFiles(e.target.files); e.target.value=''; }
+function removeStaged(id){ staged = staged.filter(s=>s.id!==id); renderStaged(); }
+function fmtSize(b){
+  if(b<1024) return b+' B';
+  if(b<1048576) return (b/1024).toFixed(0)+' KB';
+  return (b/1048576).toFixed(1)+' MB';
+}
+function fileIcon(t){
+  t=t||'';
+  if(t.includes('pdf')) return '📕';
+  if(t.includes('word')||t.includes('msword')||t.includes('document')) return '📘';
+  if(t.includes('sheet')||t.includes('excel')) return '📗';
+  if(t.startsWith('image/')) return '🖼️';
+  return '📄';
+}
+function renderStaged(){
+  document.getElementById('stagedList').innerHTML = staged.map(s=>
+    `<div class="attach-row">
+      <span>${fileIcon(s.type)}</span>
+      <span class="nm">${esc(s.name)}</span>
+      <span class="sz">${fmtSize(s.size)}</span>
+      <button class="rm" title="הסרה" onclick="removeStaged('${s.id}')">&times;</button>
+    </div>`).join('');
+}
+async function openFile(id,name){
+  try{
+    const blob = await getFile(id);
+    if(!blob){ toast('הקובץ לא נמצא'); return; }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href=url; a.target='_blank'; a.rel='noopener'; a.download=name||'';
+    // open in tab when the browser can preview it, otherwise it downloads
+    a.removeAttribute('download');
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+  }catch(err){ toast('שגיאה בפתיחת הקובץ'); }
+}
+
+/* ============ Modal ============ */
+function fillSelect(el, arr, selected){
+  el.innerHTML = arr.map(v=>`<option ${v===selected?'selected':''}>${v}</option>`).join('');
+}
+function openModal(entry){
+  document.getElementById('overlay').classList.add('show');
+  fillSelect(document.getElementById('fCompany'), COMPANIES, entry?.company);
+  fillSelect(document.getElementById('fCategory'), categories, entry?.category);
+  document.getElementById('editId').value = entry?.id || '';
+  document.getElementById('fTitle').value = entry?.title || '';
+  document.getElementById('fContent').value = entry?.content || '';
+  document.getElementById('fLink').value = entry?.link || '';
+  document.getElementById('fDate').value = entry?.date || new Date().toISOString().slice(0,10);
+  document.getElementById('fPin').checked = entry?.pinned || false;
+  staged = (entry?.files || []).map(f=>({...f}));   // existing files (no blob = already stored)
+  renderStaged();
+  document.getElementById('modalTitle').textContent = entry ? 'עריכת פריט' : 'הוספת פריט מידע';
+  setTimeout(()=>document.getElementById('fTitle').focus(),50);
+}
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+
+async function saveEntry(){
+  const title = document.getElementById('fTitle').value.trim();
+  if(!title){ toast('יש להזין כותרת'); return; }
+  const id = document.getElementById('editId').value;
+
+  // remove files that were detached during edit
+  if(id){
+    const prev = data.find(d=>d.id===id)?.files || [];
+    const keep = new Set(staged.map(s=>s.id));
+    for(const f of prev){ if(!keep.has(f.id)) await delFile(f.id); }
+  }
+  // store newly added blobs
+  for(const s of staged){ if(s.blob){ await putFile(s.id, s.blob); } }
+  const files = staged.map(({blob,...meta})=>meta);
+
+  const obj = {
+    id: id || uid(),
+    company: document.getElementById('fCompany').value,
+    category: document.getElementById('fCategory').value,
+    title,
+    content: document.getElementById('fContent').value.trim(),
+    link: document.getElementById('fLink').value.trim(),
+    date: document.getElementById('fDate').value,
+    pinned: document.getElementById('fPin').checked,
+    files,
+    createdAt: id ? (data.find(d=>d.id===id)?.createdAt||Date.now()) : Date.now()
+  };
+  if(id){ data = data.map(d=>d.id===id?obj:d); toast('הפריט עודכן'); }
+  else { data.unshift(obj); toast('הפריט נוסף'); }
+  persist(); closeModal(); render();
+}
+function editEntry(id){ openModal(data.find(d=>d.id===id)); }
+async function deleteEntry(id){
+  if(!confirm('למחוק את הפריט?')) return;
+  const ent = data.find(d=>d.id===id);
+  for(const f of (ent?.files||[])){ await delFile(f.id); }
+  data = data.filter(d=>d.id!==id); persist(); render(); toast('הפריט נמחק');
+}
+function togglePin(id){
+  data = data.map(d=>d.id===id?{...d,pinned:!d.pinned}:d); persist(); render();
+}
+
+/* ============ Filters & render ============ */
+function setCompany(c){ activeCompany=c; render(); }
+function setCategory(c){ activeCategory=c; render(); }
+
+function esc(s){ return (s||'').replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function safeLink(u){
+  if(!u) return '';
+  if(/^https?:\/\//i.test(u)) return u;
+  if(/^www\./i.test(u)) return 'https://'+u;
+  return '';
+}
+
+function render(){
+  const q = document.getElementById('searchBox').value.trim().toLowerCase();
+  const sort = document.getElementById('sortBy').value;
+
+  // sidebar counts
+  renderSidebar();
+
+  let list = data.filter(d=>{
+    if(activeCompany!=='all' && d.company!==activeCompany) return false;
+    if(activeCategory!=='all' && d.category!==activeCategory) return false;
+    if(q){
+      const blob = (d.title+' '+d.content+' '+d.company+' '+d.category).toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+
+  // sort: pinned always first
+  const sorters = {
+    dateDesc:(a,b)=>(b.date||'').localeCompare(a.date||'')||b.createdAt-a.createdAt,
+    dateAsc:(a,b)=>(a.date||'').localeCompare(b.date||'')||a.createdAt-b.createdAt,
+    company:(a,b)=>a.company.localeCompare(b.company,'he'),
+    category:(a,b)=>a.category.localeCompare(b.category,'he'),
+    title:(a,b)=>a.title.localeCompare(b.title,'he')
+  };
+  list.sort((a,b)=>{
+    if(a.pinned!==b.pinned) return a.pinned?-1:1;
+    return sorters[sort](a,b);
+  });
+
+  document.getElementById('resultMeta').textContent =
+    data.length ? `מוצגים ${list.length} מתוך ${data.length} פריטים` : '';
+
+  const wrap = document.getElementById('entries');
+  if(!list.length){
+    wrap.innerHTML = `<div class="empty">
+      <div class="big">📭</div>
+      <div style="font-size:17px;font-weight:700;color:#334155;margin-bottom:6px">
+        ${data.length ? 'לא נמצאו פריטים תואמים' : 'עדיין אין פריטי מידע'}</div>
+      <div>${data.length ? 'נסה לשנות חיפוש או סינון' : 'התחל בהוספת מידע מקצועי שקיבלת מחברות הביטוח'}</div>
+      ${data.length ? '' : '<div style="margin-top:16px"><button class="btn btn-solid" onclick="openModal()">➕ הוספת פריט ראשון</button></div>'}
+    </div>`;
+    return;
+  }
+
+  wrap.innerHTML = list.map(d=>{
+    const url = safeLink(d.link);
+    return `<div class="entry ${d.pinned?'pinned':''}">
+      ${d.pinned?'<span class="pin-star">⭐</span>':''}
+      <div class="row1">
+        <span class="chip">${esc(d.company)}</span>
+        <span class="chip cat">${esc(d.category)}</span>
+      </div>
+      <h3>${esc(d.title)}</h3>
+      ${d.content?`<div class="content">${esc(d.content)}</div>`:''}
+      ${url?`<a class="link" href="${esc(url)}" target="_blank" rel="noopener">🔗 פתיחת המסמך/קישור</a>`:''}
+      ${(d.files&&d.files.length)?`<div class="files">${d.files.map(f=>
+        `<button class="file-btn" onclick="openFile('${f.id}','${esc(f.name)}')">
+           <span>${fileIcon(f.type)}</span><span class="nm">${esc(f.name)}</span><span class="sz" style="color:var(--txt-soft);font-size:11.5px">${fmtSize(f.size)}</span>
+         </button>`).join('')}</div>`:''}
+      <div class="foot">
+        <span class="date">📅 ${d.date?formatDate(d.date):'—'}</span>
+        <div class="tools">
+          <button class="icon-btn" title="הצמדה" onclick="togglePin('${d.id}')">${d.pinned?'📌':'📍'}</button>
+          <button class="icon-btn" title="עריכה" onclick="editEntry('${d.id}')">✏️</button>
+          <button class="icon-btn" title="מחיקה" onclick="deleteEntry('${d.id}')">🗑️</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function formatDate(s){
+  const [y,m,d]=s.split('-'); return `${d}/${m}/${y}`;
+}
+
+function renderSidebar(){
+  const compCounts={}, catCounts={};
+  data.forEach(d=>{ compCounts[d.company]=(compCounts[d.company]||0)+1; catCounts[d.category]=(catCounts[d.category]||0)+1; });
+
+  const compItems = [{name:'all',label:'כל החברות',n:data.length}]
+    .concat(COMPANIES.filter(c=>compCounts[c]).map(c=>({name:c,label:c,n:compCounts[c]})));
+  document.getElementById('companyFilters').innerHTML = compItems.map(c=>
+    `<div class="filter-item ${activeCompany===c.name?'active':''}" onclick="setCompany('${c.name}')">
+      <span>${esc(c.label)}</span><span class="count">${c.n}</span></div>`).join('');
+
+  const catItems = [{name:'all',label:'כל הקטגוריות',n:data.length}]
+    .concat(categories.map(c=>({name:c,label:c,n:catCounts[c]||0})));
+  document.getElementById('categoryFilters').innerHTML = catItems.map(c=>
+    `<div class="filter-item ${activeCategory===c.name?'active':''}" onclick="setCategory('${c.name}')">
+      <span>${esc(c.label)}</span><span class="count">${c.n}</span></div>`).join('');
+
+  const pinned = data.filter(d=>d.pinned).length;
+  const companies = new Set(data.map(d=>d.company)).size;
+  document.getElementById('stats').innerHTML =
+    `<div class="stat-row"><span>סך פריטים</span><b>${data.length}</b></div>
+     <div class="stat-row"><span>חברות פעילות</span><b>${companies}</b></div>
+     <div class="stat-row"><span>מסומנים כחשובים</span><b>${pinned}</b></div>`;
+}
+
+/* ============ Backup / restore ============ */
+function blobToB64(blob){
+  return new Promise(res=>{ const r=new FileReader(); r.onload=()=>res(r.result); r.readAsDataURL(blob); });
+}
+async function b64ToBlob(d){ return (await fetch(d)).blob(); }
+
+async function exportData(){
+  toast('מכין גיבוי...');
+  const blobs = {};
+  for(const d of data){ for(const f of (d.files||[])){
+    const b = await getFile(f.id); if(b) blobs[f.id] = await blobToB64(b);
+  }}
+  const payload = { _format:'insuranceKnowledgeHub', _version:1, entries:data, categories, files:blobs };
+  const blob = new Blob([JSON.stringify(payload)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `גיבוי-ידע-ביטוח-${new Date().toISOString().slice(0,10)}.json`;
+  a.click(); URL.revokeObjectURL(a.href);
+  toast('הגיבוי נוצר (כולל הקבצים)');
+}
+function importData(e){
+  const file = e.target.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = async ()=>{
+    try{
+      const parsed = JSON.parse(r.result);
+      const entries = Array.isArray(parsed) ? parsed : parsed.entries;   // supports old & new format
+      const files = Array.isArray(parsed) ? {} : (parsed.files||{});
+      if(!Array.isArray(entries)) throw 0;
+      if(data.length && !confirm('לשחזר ולהחליף את הנתונים הקיימים?')) return;
+      for(const [id,d] of Object.entries(files)){ await putFile(id, await b64ToBlob(d)); }
+      if(Array.isArray(parsed.categories) && parsed.categories.length){ categories = parsed.categories; persistCats(); }
+      data = entries; persist(); render(); toast('הנתונים שוחזרו');
+    }catch(err){ toast('קובץ לא תקין'); }
+  };
+  r.readAsText(file);
+  e.target.value='';
+}
+
+/* ============ Misc ============ */
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200);
+}
+document.getElementById('overlay').addEventListener('click',e=>{ if(e.target.id==='overlay') closeModal(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeModal(); closeCatManager(); } });
+
+/* ============ Category manager ============ */
+function openCatManager(){ document.getElementById('catOverlay').classList.add('show'); renderCatList(); }
+function closeCatManager(){ document.getElementById('catOverlay').classList.remove('show'); }
+function renderCatList(){
+  const counts={}; data.forEach(d=>counts[d.category]=(counts[d.category]||0)+1);
+  document.getElementById('catList').innerHTML = categories.map((c,i)=>
+    `<div class="attach-row" id="catrow-${i}">
+      <span class="nm">🗂️ ${esc(c)}</span>
+      <span class="sz">${counts[c]||0} פריטים</span>
+      <button class="icon-btn" title="שינוי שם" onclick="renameCategory(${i})">✏️</button>
+      <button class="rm" title="מחיקה" onclick="deleteCategory(${i})">&times;</button>
+    </div>`).join('');
+}
+function addCategory(){
+  const inp=document.getElementById('newCat'); const name=inp.value.trim();
+  if(!name){ toast('יש להזין שם'); return; }
+  if(categories.includes(name)){
+    toast(`"${name}" כבר קיימת ברשימה למטה`);
+    const row=document.getElementById('catrow-'+categories.indexOf(name));
+    if(row){ row.scrollIntoView({block:'nearest'}); row.classList.add('flash'); setTimeout(()=>row.classList.remove('flash'),1600); }
+    return;
+  }
+  categories.push(name); persistCats(); inp.value=''; inp.focus();
+  renderCatList(); render(); toast('הקטגוריה נוספה');
+}
+function renameCategory(i){
+  const old=categories[i];
+  const name=prompt('שם חדש לקטגוריה:', old); if(name===null) return;
+  const t=name.trim();
+  if(!t){ toast('שם לא תקין'); return; }
+  if(t!==old && categories.includes(t)){ toast('כבר קיימת קטגוריה בשם זה'); return; }
+  categories[i]=t;
+  data=data.map(d=>d.category===old?{...d,category:t}:d);   // keep existing items in sync
+  persistCats(); persist(); renderCatList(); render(); toast('השם עודכן');
+}
+function deleteCategory(i){
+  const name=categories[i];
+  const remaining=categories.filter((_,idx)=>idx!==i);
+  if(!remaining.length){ toast('חייבת להישאר לפחות קטגוריה אחת'); return; }
+  const used=data.filter(d=>d.category===name).length;
+  const target=remaining.includes('אחר')?'אחר':remaining[0];
+  const msg=used
+    ? `יש ${used} פריטים בקטגוריה "${name}". הם יועברו אל "${target}". להמשיך?`
+    : `למחוק את הקטגוריה "${name}"?`;
+  if(!confirm(msg)) return;
+  if(used) data=data.map(d=>d.category===name?{...d,category:target}:d);
+  categories=remaining;
+  persistCats(); persist(); renderCatList(); render(); toast('הקטגוריה נמחקה');
+}
+document.getElementById('catOverlay').addEventListener('click',e=>{ if(e.target.id==='catOverlay') closeCatManager(); });
+
+/* ============ Drag & drop ============ */
+const dz = document.getElementById('dropzone');
+let dragDepth = 0;
+const hasFiles = e => e.dataTransfer && [...e.dataTransfer.types].includes('Files');
+
+window.addEventListener('dragenter', e=>{
+  if(!hasFiles(e)) return;
+  e.preventDefault(); dragDepth++; dz.classList.add('show');
+});
+window.addEventListener('dragover', e=>{ if(hasFiles(e)) e.preventDefault(); });
+window.addEventListener('dragleave', e=>{
+  if(!hasFiles(e)) return;
+  dragDepth--; if(dragDepth<=0){ dragDepth=0; dz.classList.remove('show'); }
+});
+window.addEventListener('drop', e=>{
+  if(!hasFiles(e)) return;
+  e.preventDefault(); dragDepth=0; dz.classList.remove('show');
+  const files = e.dataTransfer.files; if(!files.length) return;
+  const modalOpen = document.getElementById('overlay').classList.contains('show');
+  if(!modalOpen) openModal();               // open a fresh "add item" form
+  const n = addFiles(files);
+  if(n) toast(`${n} קבצים צורפו — השלם את הפרטים ושמור`);
+});
+
+render();
+</script>
+</body>
+</html>
